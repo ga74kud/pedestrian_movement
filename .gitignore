@@ -1,0 +1,8 @@
+venv
+.idea
+dist
+build
+*.egg-info
+outdated
+*/__pycache__/*
+*.pyc
