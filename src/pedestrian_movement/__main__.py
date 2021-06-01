@@ -16,4 +16,5 @@ if __name__ == '__main__':
         print(x)
         print(cnt)
         cnt += .3
+    print(obj.x_lst)
     del obj

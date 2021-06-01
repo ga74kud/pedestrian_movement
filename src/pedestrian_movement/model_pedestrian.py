@@ -19,6 +19,7 @@ class synthetic_pedestrian_movement(object):
         self.cnt=0
         self.param=inp_data['param']
         self.init_fcn()
+        self.x_lst=list()
 
     """
         Parameters as properties
@@ -52,13 +53,16 @@ class synthetic_pedestrian_movement(object):
         (Source: De Nicolao, Giuseppe, Antonella Ferrara, and Luisa Giacomini. "Onboard sensor-based collision risk assessment to improve pedestrians' safety." IEEE transactions on vehicular technology 56.5 (2007): 2405-2413.)
     """
     def get_initial_state(self):
+        self.x_lst=list()
         mean_a=[0.5, -0.2]
         Sigma_a=[[2.0, 0.3], [0.3, 0.5]]
         mean_b=[1.295, -0.2]
         Sigma_b=[[2.0, 0.3], [0.3, 0.5]]
         a = np.random.multivariate_normal(mean_a, Sigma_a)
         b = np.random.multivariate_normal(mean_b, Sigma_b)
-        return np.array([a[0], b[0], a[1], b[1]])
+        x_0=np.array([a[0], b[0], a[1], b[1]])
+        self.x_lst.append(x_0)
+        return x_0
 
     """
         Compute next state
@@ -71,7 +75,8 @@ class synthetic_pedestrian_movement(object):
         x_b=x[1]+self.param['Ts']*x[3]
         x_c=x[2]+self.param['Ts']*quad_sigma_x
         x_d=x[3]+self.param['Ts']*quad_sigma_y
-        return np.array([x_a, x_b, x_c, x_d])
+        self.x_lst.append(np.array([x_a, x_b, x_c, x_d]))
+        return self.x_lst[-1]
 
     """
        Initial function to get system dynamics
