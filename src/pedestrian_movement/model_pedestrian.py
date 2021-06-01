@@ -10,7 +10,7 @@
 #!/usr/bin/env python3
 from scipy import signal
 import numpy as np
-
+from random import gauss
 """
     Class for synthetic pedestrian movements
 """
@@ -18,7 +18,6 @@ class synthetic_pedestrian_movement(object):
     def __init__(self, inp_data):
         self.cnt=0
         self.param=inp_data['param']
-        self.init_vars = inp_data['init_vars']
         self.init_fcn()
 
     """
@@ -30,26 +29,11 @@ class synthetic_pedestrian_movement(object):
 
     @param.setter
     def param(self, param):
-        self.__param =param
+        self.__param = param
 
     @param.getter
     def param(self):
         return self.__param
-
-    """
-        Initial variables
-    """
-    @property
-    def init_vars(self):
-        return self.__init_vars
-
-    @init_vars.setter
-    def init_vars(self, init_vars):
-        self.__init_vars = init_vars
-
-    @init_vars.getter
-    def init_vars(self):
-        return self.__init_vars
 
     """
         Set counter
@@ -62,6 +46,32 @@ class synthetic_pedestrian_movement(object):
     """
     def set_sample_time(self, Ts):
         self.param['Ts']=Ts
+
+    """
+        Initial state 
+        (Source: De Nicolao, Giuseppe, Antonella Ferrara, and Luisa Giacomini. "Onboard sensor-based collision risk assessment to improve pedestrians' safety." IEEE transactions on vehicular technology 56.5 (2007): 2405-2413.)
+    """
+    def get_initial_state(self):
+        mean_a=[0.5, -0.2]
+        Sigma_a=[[2.0, 0.3], [0.3, 0.5]]
+        mean_b=[1.295, -0.2]
+        Sigma_b=[[2.0, 0.3], [0.3, 0.5]]
+        a = np.random.multivariate_normal(mean_a, Sigma_a)
+        b = np.random.multivariate_normal(mean_b, Sigma_b)
+        return np.array([a[0], b[0], a[1], b[1]])
+
+    """
+        Compute next state
+        (Source: De Nicolao, Giuseppe, Antonella Ferrara, and Luisa Giacomini. "Onboard sensor-based collision risk assessment to improve pedestrians' safety." IEEE transactions on vehicular technology 56.5 (2007): 2405-2413.)
+    """
+    def next_state(self, x):
+        quad_sigma_x = gauss(0, 0.82)
+        quad_sigma_y = gauss(0, 0.5)
+        x_a=x[0]+self.param['Ts']*x[2]
+        x_b=x[1]+self.param['Ts']*x[3]
+        x_c=x[2]+self.param['Ts']*quad_sigma_x
+        x_d=x[3]+self.param['Ts']*quad_sigma_y
+        return np.array([x_a, x_b, x_c, x_d])
 
     """
        Initial function to get system dynamics
@@ -92,11 +102,6 @@ class synthetic_pedestrian_movement(object):
     def __getitem__(self, item):
         return getattr(self, item)
 
-    """
-    @TODO
-    """
-    def __setitem__(self,variable,name):
-        self.param[variable]=name
     """
         Delete the object with del <<object>>
     """

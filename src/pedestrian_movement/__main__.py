@@ -4,13 +4,16 @@ import numpy as np
 if __name__ == '__main__':
     # Parameters
     param = {'Ts': 0.3}
-    init_vars={'x_0': np.array([0, 0, 0, 0])}
-    inp_data={'param': param, 'init_vars': init_vars}
+    # Input data
+    inp_data={'param': param}
     # Initial object
     obj = get_object(inp_data)
-    print(obj['param'])
+    # Get initial state
+    x=obj.get_initial_state()
     cnt=0
     for wlt in range(0, 10):
-        cnt+=.3
+        x=obj.next_state(x)
+        print(x)
         print(cnt)
+        cnt += .3
     del obj
