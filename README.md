@@ -13,7 +13,7 @@ pip install pedestrian_movement
 
 # Usage
 
-After installation with ```bash pip install pedestrian_movement```
+After installation with ```pip install pedestrian_movement```
 or running the script:
 
 ```python

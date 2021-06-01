@@ -1,11 +1,11 @@
 import setuptools
 
-with open("README.md", "r", encoding="utf-8") as fh:
+with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name="pedestrian_movement",
-    version="0.0.1",
+    version="0.0.3",
     author="Michael Hartmann",
     author_email="michael.hartmann@v2c2.at",
     description="Human Locomotion Models",
@@ -17,11 +17,12 @@ setuptools.setup(
         "Bug Tracker": "https://github.com/ga74kud/pedestrian_movement.git",
     },
     classifiers=[
-        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 2.7",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
     package_dir={"": "src"},
+    install_requires=["matplotlib"],
     packages=setuptools.find_packages(where="src"),
-    python_requires=">=3.6",
+    python_requires=">=2.7",
 )
